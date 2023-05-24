@@ -1,0 +1,12 @@
+spring:
+  mail:
+    host: 'smtp.gmail.com'
+    port: 587
+    username: 'rodrigocarvalhodev@gmail.com'
+    password: 'senha123'
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/duckblog?createDatabaseIfNotExist=true,useUnicode=true&characterEncoding=UTF-8,serverTimezone=UTC&useLegacyDatetimeCode=false'
+    username: 'postgres'
+    password: 'masterkey'
+  jpa:
+    show-sql: true
