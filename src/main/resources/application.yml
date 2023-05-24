@@ -1,0 +1,40 @@
+spring:
+  profiles:
+    active: @activatedProperties@
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          use_streams_for_binary: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+    validate-on-migrate: true
+    locations:
+      - classpath:db/migration
+    schemas: blog
+  mail:
+    jndi-name: "mail/Session"
+    properties:
+      "[mail.smtp.connectiontimeout]": 5000
+      "[mail.smtp.timeout]": 3000
+      "[mail.smtp.writetimeout]": 5000
+      "[mail.transport.protocol]": 'smtp'
+  main:
+    allow-circular-references: true
+jwt:
+  header: Authorization
+  token-validity: 43200000
+  token-prefix: Bearer
+
+  signing-key: duckblog
+  authorities-key: roles
+
