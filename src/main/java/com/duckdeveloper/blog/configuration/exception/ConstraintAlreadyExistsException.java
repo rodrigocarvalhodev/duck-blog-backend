@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 public class ConstraintAlreadyExistsException extends BlogException {
 
     public ConstraintAlreadyExistsException(String constraint, String value) {
-        super(new Error("Constraint %s with value %s already exists".formatted(constraint, value), HttpStatus.CONFLICT));
+        super(new Error("Constraint %s with value %s already exists".formatted(constraint, value), HttpStatus.CONFLICT, 2));
     }
 }
