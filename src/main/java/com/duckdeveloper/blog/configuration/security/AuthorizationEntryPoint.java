@@ -22,7 +22,7 @@ public class AuthorizationEntryPoint implements AuthenticationEntryPoint {
     @Override
     @SneakyThrows
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
-        var error = new Error("Username or Password invalid", HttpStatus.FORBIDDEN);
+        var error = new Error("Username or Password invalid", HttpStatus.FORBIDDEN, 7);
 
         response.setStatus(401);
         response.setContentType("application/json");

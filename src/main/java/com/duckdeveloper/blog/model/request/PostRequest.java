@@ -1,5 +1,6 @@
 package com.duckdeveloper.blog.model.request;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,12 +10,12 @@ import lombok.Setter;
 
 @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter
-public class CommentRequest {
+public class PostRequest {
+
+    @Max(value = 256, message = "title can only be 200 characters long ")
+    private String title;
 
     @NotEmpty(message = "text can't be empty")
     private String text;
-
-    @NotNull(message = "postId can't be null")
-    private Long postId;
 
 }

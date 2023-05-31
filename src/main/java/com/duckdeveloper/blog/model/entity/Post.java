@@ -20,6 +20,8 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String title;
+
     private String text;
 
     private LocalDateTime createdTime;
@@ -29,7 +31,7 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
-    private User createdBy;
+    private User author;
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
