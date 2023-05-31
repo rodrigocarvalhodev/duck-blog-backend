@@ -1,10 +1,7 @@
 package com.duckdeveloper.blog.model.response;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -13,8 +10,10 @@ import java.util.Set;
 
 @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserResponse {
 
+    @EqualsAndHashCode.Include
     private Long id;
 
     private String firstName;

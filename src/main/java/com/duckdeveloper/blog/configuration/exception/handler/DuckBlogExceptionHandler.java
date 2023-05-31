@@ -24,7 +24,7 @@ public class DuckBlogExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleErrorResponseException(ErrorResponseException exception, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        var error = new Error(exception.getMessage(), exception.getStatusCode().value());
+        var error = new Error(exception.getMessage(), exception.getStatusCode().value(), 6);
         return ResponseEntity
                 .status(exception.getStatusCode())
                 .body(error);
