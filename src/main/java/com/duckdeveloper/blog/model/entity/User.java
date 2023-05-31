@@ -3,6 +3,7 @@ package com.duckdeveloper.blog.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +33,10 @@ public class User {
     private byte[] photo;
 
     private LocalDateTime registredTime;
+
+    // TODO: add birthDate
+
+    // TODO: add
 
     @OneToMany(mappedBy = "author")
     private List<Comment> comments;

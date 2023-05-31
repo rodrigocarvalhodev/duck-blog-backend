@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 public class RoleNotFoundException extends BlogException {
 
     public RoleNotFoundException(Long id) {
-        super(new Error("Role with ID %d not found".formatted(id), HttpStatus.NOT_FOUND));
+        super(new Error("Role with ID %d not found".formatted(id), HttpStatus.NOT_FOUND, 3));
     }
 }

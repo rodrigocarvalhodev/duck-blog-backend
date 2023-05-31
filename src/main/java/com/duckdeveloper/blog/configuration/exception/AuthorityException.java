@@ -8,6 +8,6 @@ import org.springframework.http.HttpStatus;
 public class AuthorityException extends BlogException {
 
     public AuthorityException(String reason) {
-        super(new Error(reason, HttpStatus.FORBIDDEN));
+        super(new Error(reason, HttpStatus.FORBIDDEN, 1));
     }
 }

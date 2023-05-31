@@ -9,7 +9,6 @@ import com.duckdeveloper.blog.service.AuthenticationService;
 import com.duckdeveloper.blog.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,15 +19,11 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
-@Slf4j
 public class UserController {
 
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
-    // CRUD
-
-    // Create
     @PostMapping
     public ResponseEntity<UserResponse> create(@RequestBody @Valid UserRequest userRequest) {
         var user = userService.create(userRequest);
@@ -36,8 +31,6 @@ public class UserController {
                 .status(HttpStatus.CREATED)
                 .body(user);
     }
-
-    // Read
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_USER_VIEW_ALL', 'ROLE_ADMIN')")
@@ -61,10 +54,23 @@ public class UserController {
                 .orElseThrow(() -> new AuthorityException("User with username '%s' not found".formatted(username)));
     }
 
-    // Update
     @PutMapping("{id}")
+    @PreAuthorize("hasAnyRole('ROLE_USER_UPDATE', 'ROLE_ADMIN')")
     public ResponseEntity<UserResponse> update(@PathVariable Long id, @RequestBody @Valid UserRequest userRequest) {
         return ResponseEntity.ok(this.userService.update(id, userRequest));
+    }
+
+    @PatchMapping("{id}/checked")
+    @PreAuthorize("hasAnyRole('ROLE_USER_UPDATE', 'ROLE_ADMIN')")
+    public ResponseEntity<UserResponse> updateChecked(@PathVariable Long id) {
+        return ResponseEntity.ok(this.userService.updateChecked(id));
+    }
+
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasAnyRole('ROLE_USER_DELETE', 'ROLE_ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        this.userService.delete(id);
     }
 
     @PostMapping("/login")
