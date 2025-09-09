@@ -35,6 +35,7 @@ CREATE TABLE blog.posts(
 CREATE TABLE blog.comments(
     id SERIAL PRIMARY KEY,
     text TEXT NOT NULL,
+    created_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     author_id BIGINT NOT NULL,
     post_id BIGINT NOT NULL,
     CONSTRAINT fk_user_id FOREIGN KEY (author_id) REFERENCES blog.users(id),

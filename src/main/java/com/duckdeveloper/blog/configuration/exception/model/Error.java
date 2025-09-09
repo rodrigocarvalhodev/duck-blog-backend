@@ -13,15 +13,17 @@ public class Error {
 
     private String message;
     private int status;
+    private int errorId;
     private LocalDateTime timestamp;
 
-    public Error(String message, int status) {
+    public Error(String message, int status, int errorId) {
         this.message = message;
         this.status = status;
+        this.errorId = errorId;
         this.timestamp = LocalDateTime.now();
     }
 
-    public Error(String message, HttpStatus status) {
-        this(message, status.value());
+    public Error(String message, HttpStatus status, int errorId) {
+        this(message, status.value(), errorId);
     }
 }

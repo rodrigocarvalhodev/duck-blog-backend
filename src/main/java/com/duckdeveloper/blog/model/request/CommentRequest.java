@@ -14,9 +14,6 @@ public class CommentRequest {
     @NotEmpty(message = "text can't be empty")
     private String text;
 
-    @NotNull(message = "authorId can't be null")
-    private Long authorId;
-
     @NotNull(message = "postId can't be null")
     private Long postId;
 

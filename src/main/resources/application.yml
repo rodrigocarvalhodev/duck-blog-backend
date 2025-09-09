@@ -30,6 +30,9 @@ spring:
       "[mail.transport.protocol]": 'smtp'
   main:
     allow-circular-references: true
+server:
+  servlet:
+    context-path: '/blog'
 jwt:
   header: Authorization
   token-validity: 43200000
@@ -37,4 +40,3 @@ jwt:
 
   signing-key: duckblog
   authorities-key: roles
-

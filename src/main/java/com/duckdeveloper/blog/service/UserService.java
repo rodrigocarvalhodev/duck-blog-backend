@@ -3,7 +3,8 @@ package com.duckdeveloper.blog.service;
 import com.duckdeveloper.blog.configuration.exception.AuthorityException;
 import com.duckdeveloper.blog.configuration.exception.ConstraintAlreadyExistsException;
 import com.duckdeveloper.blog.configuration.exception.RoleNotFoundException;
-import com.duckdeveloper.blog.configuration.exception.UserNotFountException;
+import com.duckdeveloper.blog.configuration.exception.UserNotFoundException;
+import com.duckdeveloper.blog.configuration.security.AuthorizationChecker;
 import com.duckdeveloper.blog.configuration.security.provider.JWTProvider;
 import com.duckdeveloper.blog.model.entity.Role;
 import com.duckdeveloper.blog.model.entity.User;
@@ -32,12 +33,12 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
+    private final AuthenticationService authenticationService;
+    private final AuthorizationChecker authorizationChecker;
+
     private final ModelMapper modelMapper;
 
     private final JWTProvider jwtProvider;
-
-    private final String CONSTRAINT_EMAIL = "email";
-    private final String CONSTRAINT_USERNAME = "username";
 
     // Create
     public UserResponse create(UserRequest userRequest) {
@@ -70,15 +71,37 @@ public class UserService implements UserDetailsService {
     // Update
     public UserResponse update(Long id, UserRequest userRequest) {
         var userToUpdate = this.userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFountException(id));
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        var loggedUser = this.authenticationService.getLoggedUser();
+        authorizationChecker.verifyIsAnotherUser(userToUpdate, loggedUser);
 
         var userUpdated = this.mapToEntity(userRequest);
         this.updateData(userToUpdate, userUpdated);
         this.verifyConstraints(userToUpdate);
         this.setUpRoles(userToUpdate, userToUpdate.getRoles());
 
-        var userSaved = this.userRepository.save(userUpdated);
+        var userSaved = this.userRepository.save(userToUpdate);
         return this.mapToResponse(userSaved);
+    }
+
+    public UserResponse updateChecked(Long userId) {
+        var userToUpdate = this.userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        var loggedUser = this.authenticationService.getLoggedUser();
+        authorizationChecker.verifyIsAnotherUser(userId, loggedUser);
+
+        userToUpdate.setChecked(!userToUpdate.isChecked());
+        var userSaved = this.userRepository.save(userToUpdate);
+        return this.mapToResponse(userSaved);
+    }
+
+    public void delete(Long userId) {
+        var loggedUser = this.authenticationService.getLoggedUser();
+        authorizationChecker.verifyIsAnotherUser(userId, loggedUser);
+
+        this.userRepository.deleteById(userId);
     }
 
     public void setUpForeignKeys(User user) {
@@ -102,14 +125,16 @@ public class UserService implements UserDetailsService {
 
     public void verifyUsername(String username, Long userId) {
         var targetUser = this.userRepository.findByUsernameIgnoreCase(username);
+        var constraintUsername = "username";
         if (targetUser != null && (userId == null || !userId.equals(targetUser.getId())))
-            throw new ConstraintAlreadyExistsException(CONSTRAINT_USERNAME, username);
+            throw new ConstraintAlreadyExistsException(constraintUsername, username);
     }
 
     public void verifyEmail(String email, Long userId) {
         var targetUser = this.userRepository.findByEmailIgnoreCase(email);
+        var constraintEmail = "email";
         if (targetUser != null && (userId == null || !userId.equals(targetUser.getId())))
-            throw new ConstraintAlreadyExistsException(CONSTRAINT_EMAIL, email);
+            throw new ConstraintAlreadyExistsException(constraintEmail, email);
     }
 
     private void updateData(User userToUpdate, User userUpdated) {

@@ -21,6 +21,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -35,6 +36,7 @@ public class WebSecurityConfiguration {
     @SneakyThrows
     public SecurityFilterChain configure(HttpSecurity http) {
         http.csrf(AbstractHttpConfigurer::disable)
+                .cors(corsConfigurer -> corsConfigurationSource())
                 .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers("/actuator/**").permitAll()
                     .requestMatchers("/api/user/**").permitAll()
@@ -60,7 +62,8 @@ public class WebSecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
-        configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("POST", "GET", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

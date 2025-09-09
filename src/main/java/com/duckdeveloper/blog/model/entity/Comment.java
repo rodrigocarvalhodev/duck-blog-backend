@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "comments", schema = "blog")
 @AllArgsConstructor @NoArgsConstructor
@@ -17,6 +19,8 @@ public class Comment {
     private Long id;
 
     private String text;
+
+    private LocalDateTime createdTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
